@@ -1,0 +1,84 @@
+var currentScene = 0;
+var levelCounter = 0;
+var score = 0;
+
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    fill(94, 204, 187);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+10, this.y+this.height/4);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var target = function(){
+fill(0, 0, 0);
+ellipse(200, 80, 150, 150);
+fill(255, 255, 255);
+ellipse(200, 80, 120, 120);
+fill(0, 255, 238);
+ellipse(200, 80, 90, 90);
+fill(255, 0, 0);
+ellipse(200, 80, 60, 60);
+fill(242, 255, 0);
+ellipse(200, 80, 30, 30);
+}; 
+
+var gameBall = function() {
+    ellipse(10,200,10,10);  
+};
+
+var startBtn = new Button({
+    x: 145,
+    y: 312,
+    width: 127,
+    label: "Click to Start",
+    onClick: function(){
+        currentScene = 1;
+    }
+});
+
+var htpBtn = new Button({
+    x: 100,
+    y: 312,
+    width:127,
+    label: "How to Play"
+    onClick: function(){
+        currentScene = 
+    }
+});
+
+var splashScreen = function() {
+    background(255, 255, 255);
+    fill(0, 0, 0);
+    textSize(48);
+    text("Stop the Ball!", 64,55);
+    startBtn.draw();
+};
+splashScreen();
+
+var gameScene = function() {
+    gameBall();
+};

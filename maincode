@@ -1,5 +1,5 @@
-var currentScene = 0;
-var levelCounter = 0;
+var currentScene = 1;
+var levelCounter = 1;
 var score = 0;
 
 var Button = function(config) {
@@ -46,29 +46,55 @@ fill(242, 255, 0);
 ellipse(200, 80, 30, 30);
 }; 
 
-var gameBall = function() {
-    ellipse(10,200,10,10);  
+var drawBall = function() {
+    fill(224, 33, 224);
+    ellipse(200,365,30,30);  
 };
 
 var startBtn = new Button({
-    x: 145,
-    y: 312,
+    x: 135,
+    y: 257,
     width: 127,
     label: "Click to Start",
+    onClick: function(){
+        currentScene = 2;
+    }
+});
+
+var htpBtn = new Button({
+    x: 135,
+    y: 312,
+    width:127,
+    label: "How to Play",
+    onClick: function(){
+        currentScene = 0;
+    }
+});
+
+var homeBtn = new Button({
+    x: 250,
+    y: 312,
+    width: 106,
+    label: "Home",
     onClick: function(){
         currentScene = 1;
     }
 });
 
-var htpBtn = new Button({
-    x: 100,
-    y: 312,
-    width:127,
-    label: "How to Play"
-    onClick: function(){
-        currentScene = 
-    }
-});
+var htpScreen = function() {
+    background(255, 255, 255);
+    text("After clicking the start button you will use", 0,0);
+    text("the space bar to start the game.", 0,20);
+    text("You will be given a 3 second countdown", 0,60);
+    text("before the ball will move towards the target.", 0,80);
+    text("Stop the ball using SPACE and gain points", 0,120);
+    text("based on how close to the center of the target", 0,140);
+    text("you are.", 0,160);
+    text("Missing the target will end the game!", 0,200);
+    text("After each level the ball will get faster!", 0,240);
+    text("Good luck player!", 0,280);
+    homeBtn.draw();
+};
 
 var splashScreen = function() {
     background(255, 255, 255);
@@ -76,9 +102,43 @@ var splashScreen = function() {
     textSize(48);
     text("Stop the Ball!", 64,55);
     startBtn.draw();
+    htpBtn.draw();
 };
-splashScreen();
 
-var gameScene = function() {
-    gameBall();
+var gameScreen = function() {
+    background(42, 168, 168);
+    target();
+    fill(0, 0, 0);
+    text("Level: " + levelCounter, 7,0);
+    text("Score: " + score,311,0);
+};
+
+mouseClicked = function() {
+    startBtn.handleMouseClick();
+    htpBtn.handleMouseClick();
+    homeBtn.handleMouseClick();
+};
+
+var ball = function(x,y) {
+    this.x = x;
+    this.y = y;
+};
+
+ball.prototype.draw = function() {
+     drawBall(this.x, this.y, 30,30);
+};
+
+var ball = new ball(200,365);
+
+draw = function() {
+    if(currentScene === 0) {
+        htpScreen();
+    }
+    if (currentScene === 1) {
+     splashScreen();
+    }
+    else if(currentScene === 2) {
+        gameScreen();
+        ball.draw();
+    }
 };

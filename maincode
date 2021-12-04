@@ -1,3 +1,4 @@
+var stillPlaying = true; 
 var currentScene = 1;
 var levelCounter = 1;
 var score = 0;
@@ -81,6 +82,16 @@ var homeBtn = new Button({
     }
 });
 
+var playAgain = new Button({
+    x: 135,
+    y: 315,
+    width: 115,
+    label: "Play Again",
+    onClick: function() {
+        currentScene = 2;
+    }
+});
+
 var htpScreen = function() {
     background(255, 255, 255);
     text("After clicking the start button you will use", 0,0);
@@ -113,6 +124,11 @@ var gameScreen = function() {
     text("Score: " + score,311,0);
 };
 
+var overScreen = function() {
+    background(255, 0, 0);
+    text("Game Over",140,200);
+};
+
 mouseClicked = function() {
     startBtn.handleMouseClick();
     htpBtn.handleMouseClick();
@@ -131,6 +147,7 @@ ball.prototype.draw = function() {
 var ball = new ball(200,365);
 
 draw = function() {
+    if(stillPlaying){
     if(currentScene === 0) {
         htpScreen();
     }
@@ -140,5 +157,6 @@ draw = function() {
     else if(currentScene === 2) {
         gameScreen();
         ball.draw();
+    }
     }
 };

@@ -2,6 +2,7 @@ var stillPlaying = true;
 var currentScene = 1;
 var levelCounter = 1;
 var score = 0;
+var ballMoving = 0;
 
 var Button = function(config) {
     this.x = config.x || 0;
@@ -47,9 +48,9 @@ fill(242, 255, 0);
 ellipse(200, 80, 30, 30);
 }; 
 
-var drawBall = function() {
+var drawBall = function(x,y) {
     fill(224, 33, 224);
-    ellipse(200,365,30,30);  
+    ellipse(x,y,30,30);  
 };
 
 var startBtn = new Button({
@@ -138,10 +139,22 @@ mouseClicked = function() {
 var ball = function(x,y) {
     this.x = x;
     this.y = y;
+    
 };
 
 ball.prototype.draw = function() {
      drawBall(this.x, this.y, 30,30);
+};
+
+ball.prototype.start = function() {
+    this.y -= 2*levelCounter;
+    ballMoving = 1; 
+};
+
+ball.prototype.stop = function() {
+    this.y -= 0;
+    ballMoving = 0;
+    
 };
 
 var ball = new ball(200,365);
@@ -156,7 +169,33 @@ draw = function() {
     }
     else if(currentScene === 2) {
         gameScreen();
-        ball.draw();
+        
+        
+        
+         if(ballMoving === 0 && keyPressed && keyCode === UP){
+       
+       
+        ball.start();
+        
+         }
+            else if(ballMoving === 1 && keyPressed && keyCode === UP){
+                ball.stop();
+            }
+        
+     
+       ball.draw(); 
     }
+  
+        
     }
+    
+  
+        
+    
+    
+   
+    
+    
+     
+    
 };

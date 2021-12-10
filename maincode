@@ -1,11 +1,11 @@
-var drawBall = function(ballX, ballY){
+var drawBall = function (ballX, ballY) {
     ellipse(ballX, ballY, 30, 30);
 };
 
 
-var stillPlaying = true; 
+var stillPlaying = true;
 var currentScene = 1;
-var levelCounter = -1;
+var levelCounter = 0;
 var score = 0;
 var ballMoving = 0;
 var ballInside = false;
@@ -14,58 +14,75 @@ var ballX = 200;
 var ballY = 360;
 var released = 0;
 var gameStarted = false;
+var tempScore = 0;
 
-var nextLevel = function(){
+
+
+var nextLevel = function () {
     ballY = 365;
     currentScene = 3;
     background(0, 255, 26);
     textSize(30);
     text("Great Job!", 130, 100);
-    text("Next Level: " + (levelCounter +1) , 120, 180);
-    
+    text("Next Level: " + (levelCounter + 1), 120, 180);
+    text("You have " + score + " points!", 72, 311);
+
 };
 
-var overScreen = function() {
+var overScreen = function () {
     background(0, 132, 255);
-    text("GAME OVER!!",130,200);
+    text("GAME OVER!!", 130, 200);
     text("Final Score: " + score, 135, 260);
 }; //Game over screen
 
-var ball = function(x,y){
+var ball = function (x, y) {
     this.x = ballX;
     this.y = ballY;
     this.img = drawBall(ballX, ballY, 30, 30);
 };
 
-ball.prototype.draw = function() {
+ball.prototype.draw = function () {
     fill(112, 112, 112);
-    this.y = constrain(this.y, 0, height-50);
+    this.y = constrain(this.y, 0, height - 50);
     this.img = drawBall(ballX, ballY, 30, 30);
 };
 
-ball.prototype.rise = function() {
+ball.prototype.rise = function () {
     this.img = drawBall(ballX, ballY, 30, 30);
-    this.y = ballY = ballY - (2*levelCounter);
-     
+    this.y = ballY = ballY - (2 * levelCounter);
+
 };
 
-ball.prototype.stop = function() {
+ball.prototype.stop = function () {
     this.img = drawBall(ballX, ballY, 30, 30);
     this.y = ballY += 0;
-    
-    
-}; 
 
-ball.prototype.isBallInside = function(){
-    if(ballY >= 40 && ballY <=120){ballInside = true;}
-    
-    if(ballY < 40){ballInside = false;}
-    
-    if(ballInside === true && released === 1){
+
+};
+
+ball.prototype.isBallInside = function () {
+    if (ballY >= 40 && ballY <= 120) { 
+        ballInside = true; }
+
+    if (ballY < 40) { 
+        ballInside = false; }
+
+    if (ballInside === true && released === 1) {
+        tempScore = Math.abs(80 - ballY);
+        if (tempScore === 0) {
+        score = score + 100;
+    }
+    if (tempScore >= 1 && tempScore < 40) {
+        score = score + 50;
+    }
+    if (tempScore >= 40 && tempScore <= 100) {
+        score = score + 25;
+    }
         nextLevel();
     }
     
-   
+
+
 };
 
 
@@ -73,52 +90,52 @@ ball.prototype.isBallInside = function(){
 
 //Ball Constructors 
 
-var ball = new ball(200,365); //Game Play Ball
+var ball = new ball(200, 365); //Game Play Ball
 
 
 
-var Button = function(config) {
+var Button = function (config) {
     this.x = config.x || 0;
     this.y = config.y || 0;
     this.width = config.width || 150;
     this.height = config.height || 50;
     this.label = config.label || "Click";
-    this.onClick = config.onClick || function() {};
+    this.onClick = config.onClick || function () { };
 };
 
-Button.prototype.draw = function() {
+Button.prototype.draw = function () {
     fill(94, 204, 187);
     rect(this.x, this.y, this.width, this.height, 5);
     fill(0, 0, 0);
     textSize(19);
     textAlign(LEFT, TOP);
-    text(this.label, this.x+10, this.y+this.height/4);
+    text(this.label, this.x + 10, this.y + this.height / 4);
 };
 
-Button.prototype.isMouseInside = function() {
+Button.prototype.isMouseInside = function () {
     return mouseX > this.x &&
-           mouseX < (this.x + this.width) &&
-           mouseY > this.y &&
-           mouseY < (this.y + this.height);
+        mouseX < (this.x + this.width) &&
+        mouseY > this.y &&
+        mouseY < (this.y + this.height);
 };
 
-Button.prototype.handleMouseClick = function() {
+Button.prototype.handleMouseClick = function () {
     if (this.isMouseInside()) {
         this.onClick();
     }
 }; //Khan Button Code
 
-var target = function(){
-fill(0, 0, 0);
-ellipse(200, 80, 150, 150);
-fill(255, 255, 255);
-ellipse(200, 80, 120, 120);
-fill(0, 255, 238);
-ellipse(200, 80, 90, 90);
-fill(255, 0, 0);
-ellipse(200, 80, 60, 60);
-fill(242, 255, 0);
-ellipse(200, 80, 30, 30);
+var target = function () {
+    fill(0, 0, 0);
+    ellipse(200, 80, 150, 150);
+    fill(255, 255, 255);
+    ellipse(200, 80, 120, 120);
+    fill(0, 255, 238);
+    ellipse(200, 80, 90, 90);
+    fill(255, 0, 0);
+    ellipse(200, 80, 60, 60);
+    fill(242, 255, 0);
+    ellipse(200, 80, 30, 30);
 };  //Game Target
 
 
@@ -130,7 +147,7 @@ var startBtn = new Button({
     y: 257,
     width: 127,
     label: "Click to Start",
-    onClick: function(){
+    onClick: function () {
         currentScene = 2;
     }
 }); //Button To Start Game 
@@ -138,9 +155,9 @@ var startBtn = new Button({
 var htpBtn = new Button({
     x: 135,
     y: 312,
-    width:127,
+    width: 127,
     label: "How to Play",
-    onClick: function(){
+    onClick: function () {
         currentScene = 0;
     }
 }); //Button Leading To Instructions
@@ -150,7 +167,7 @@ var homeBtn = new Button({
     y: 312,
     width: 106,
     label: "Home",
-    onClick: function(){
+    onClick: function () {
         currentScene = 1;
     }
 }); //Button Leading Back To Home Screen
@@ -160,26 +177,26 @@ var playAgain = new Button({
     y: 315,
     width: 115,
     label: "Play Again",
-    onClick: function() {
+    onClick: function () {
         currentScene = 2;
     }
-});  
+});
 
 
 var nxtLevel = new Button({
-    
+
     x: 140,
     y: 250,
     width: 115,
     label: "Next Level",
-    onClick: function(){
+    onClick: function () {
         released = 0;
         gameStarted = false;
         levelCounter = levelCounter + 1;
         ballInside = false;
         currentScene = 2;
-       
-        
+
+
     }
 });
 
@@ -187,26 +204,26 @@ var nxtLevel = new Button({
 
 
 
-var htpScreen = function() {
+var htpScreen = function () {
     background(255, 255, 255);
-    text("After clicking the start button you will use", 0,0);
-    text("the space bar to start the game.", 0,20);
-    text("You will be given a 3 second countdown", 0,60);
-    text("before the ball will move towards the target.", 0,80);
-    text("Stop the ball using SPACE and gain points", 0,120);
-    text("based on how close to the center of the target", 0,140);
-    text("you are.", 0,160);
-    text("Missing the target will end the game!", 0,200);
-    text("After each level the ball will get faster!", 0,240);
-    text("Good luck player!", 0,280);
+    text("After clicking the start button you will use", 0, 0);
+    text("the space bar to start the game.", 0, 20);
+    text("You will be given a 3 second countdown", 0, 60);
+    text("before the ball will move towards the target.", 0, 80);
+    text("Stop the ball using SPACE and gain points", 0, 120);
+    text("based on how close to the center of the target", 0, 140);
+    text("you are.", 0, 160);
+    text("Missing the target will end the game!", 0, 200);
+    text("After each level the ball will get faster!", 0, 240);
+    text("Good luck player!", 0, 280);
     homeBtn.draw();
 };  //Code For Instrucitons Screen
 
-var splashScreen = function() {
+var splashScreen = function () {
     background(255, 255, 255);
     fill(0, 0, 0);
     textSize(48);
-    text("Stop the Ball!", 64,55);
+    text("Stop the Ball!", 64, 55);
     startBtn.draw();
     htpBtn.draw();
 }; //Starting Screen
@@ -214,7 +231,7 @@ var splashScreen = function() {
 
 
 
-mouseClicked = function() {
+mouseClicked = function () {
     startBtn.handleMouseClick();
     htpBtn.handleMouseClick();
     homeBtn.handleMouseClick();
@@ -223,11 +240,10 @@ mouseClicked = function() {
 
 
 fill(0, 0, 0);
-text("released" + released, 30, 200);
 
-keyReleased = function(){
+keyReleased = function () {
 
-    if(keyCode === 0){
+    if (keyCode === 0) {
         fill(0, 0, 0);
         text("released", 200, 300);
         released = released + 1;
@@ -235,76 +251,71 @@ keyReleased = function(){
 
 };
 
+var gameScreen = function () {
 
-
-var gameScreen = function() {
-    
     background(42, 168, 168);
     target();
-   
+
     fill(0, 0, 0);
-    text("Level: " + levelCounter, 7,0);
-    text("Score: " + score,311,0);
-    
-    text("released: " + released, 10, 150);
-    
-    text(gameStarted, 50, 300);
-    
+    text("Level: " + levelCounter, 7, 0);
+    text("Score: " + score, 300, 0);
+
+    text(gameStarted, -45, 300);
+
     drawBall(ballX, ballY, 30, 30);
-    
+
     ball.isBallInside();
-  
-    
-    
-      if (keyIsPressed && keyCode === 0) {
+
+
+
+    if (keyIsPressed && keyCode === 0) {
         gameStarted = true;
         ball.rise();
-        text("pressed", 100, 200);
         released = 0;
-    } else{released = 1;}
-    
-     
-      
-    
-        if(ballY < 0){
+    } else { released = 1; }
+
+
+
+
+    if (ballY < 0) {
         currentScene = 4;
-     }
-     
-      if(released === 1 && gameStarted === true && ballInside === false){
-        currentScene = 4; 
     }
-    
+
+    if (released === 1 && gameStarted === true && ballInside === false) {
+        currentScene = 4;
+    }
+
     ball.draw();
 };
 
 
- //Game playing screen
- 
-draw = function() {
-    if(stillPlaying){
-    if(currentScene === 0) {
-        htpScreen();
-    }
-    if (currentScene === 1) {
-     splashScreen();
-    }
-    if(currentScene === 2) {
-        gameScreen();
+//Game playing screen
+
+draw = function () {
+    if (stillPlaying) {
+        if (currentScene === 0) {
+            htpScreen();
         }
-        
-    if(currentScene === 3) {
-        nextLevel();
-        nxtLevel.draw();
-        
+        if (currentScene === 1) {
+            splashScreen();
+        }
+        if (currentScene === 2) {
+            gameScreen();
+        }
+
+        if (currentScene === 3) {
+            nextLevel();
+            nxtLevel.draw();
+
+        }
     }
-    }
-    
-    if(currentScene === 4){
+
+    if (currentScene === 4) {
         overScreen();
-        
+
     }
-    
-    
+
+
 };
 
 

@@ -1,8 +1,55 @@
+var drawBall = function(ballX, ballY){
+    ellipse(ballX, ballY, 30, 30);
+};
+
+
 var stillPlaying = true; 
 var currentScene = 1;
 var levelCounter = 1;
 var score = 0;
 var ballMoving = 0;
+var inSession = 0;
+var ballX = 200;
+var ballY = 360;
+
+
+var ball = function(x,y){
+    this.x = ballX;
+    this.y = ballY;
+    this.img = drawBall(ballX, ballY, 30, 30);
+};
+
+ball.prototype.draw = function() {
+    fill(112, 112, 112);
+    this.y = constrain(this.y, 0, height-50);
+    this.img = drawBall(ballX, ballY, 30, 30);
+};
+
+ball.prototype.rise = function() {
+    this.img = drawBall(ballX, ballY, 30, 30);
+    this.y = ballY -= 5;
+     
+};
+
+ball.prototype.stop = function() {
+    this.img = drawBall(ballX, ballY, 30, 30);
+    this.y = ballY += 0;
+    
+    
+}; 
+
+ball.prototype.isBallInside = function(){
+    
+    
+};
+
+
+
+//Ball Constructors 
+
+var ball = new ball(200,365); //Game Play Ball
+
+
 
 var Button = function(config) {
     this.x = config.x || 0;
@@ -33,7 +80,7 @@ Button.prototype.handleMouseClick = function() {
     if (this.isMouseInside()) {
         this.onClick();
     }
-};
+}; //Khan Button Code
 
 var target = function(){
 fill(0, 0, 0);
@@ -46,12 +93,9 @@ fill(255, 0, 0);
 ellipse(200, 80, 60, 60);
 fill(242, 255, 0);
 ellipse(200, 80, 30, 30);
-}; 
+};  //Game Target
 
-var drawBall = function(x,y) {
-    fill(224, 33, 224);
-    ellipse(x,y,30,30);  
-};
+
 
 var startBtn = new Button({
     x: 135,
@@ -61,7 +105,7 @@ var startBtn = new Button({
     onClick: function(){
         currentScene = 2;
     }
-});
+}); //Button To Start Game 
 
 var htpBtn = new Button({
     x: 135,
@@ -71,7 +115,7 @@ var htpBtn = new Button({
     onClick: function(){
         currentScene = 0;
     }
-});
+}); //Button Leading To Instructions
 
 var homeBtn = new Button({
     x: 250,
@@ -81,7 +125,7 @@ var homeBtn = new Button({
     onClick: function(){
         currentScene = 1;
     }
-});
+}); //Button Leading Back To Home Screen
 
 var playAgain = new Button({
     x: 135,
@@ -91,7 +135,7 @@ var playAgain = new Button({
     onClick: function() {
         currentScene = 2;
     }
-});
+});  //Allows User To Play Again
 
 var htpScreen = function() {
     background(255, 255, 255);
@@ -106,7 +150,7 @@ var htpScreen = function() {
     text("After each level the ball will get faster!", 0,240);
     text("Good luck player!", 0,280);
     homeBtn.draw();
-};
+};  //Code For Instrucitons Screen
 
 var splashScreen = function() {
     background(255, 255, 255);
@@ -115,20 +159,13 @@ var splashScreen = function() {
     text("Stop the Ball!", 64,55);
     startBtn.draw();
     htpBtn.draw();
-};
+}; //Starting Screen
 
-var gameScreen = function() {
-    background(42, 168, 168);
-    target();
-    fill(0, 0, 0);
-    text("Level: " + levelCounter, 7,0);
-    text("Score: " + score,311,0);
-};
 
 var overScreen = function() {
     background(255, 0, 0);
     text("Game Over",140,200);
-};
+}; //Game over screen
 
 mouseClicked = function() {
     startBtn.handleMouseClick();
@@ -136,29 +173,30 @@ mouseClicked = function() {
     homeBtn.handleMouseClick();
 };
 
-var ball = function(x,y) {
-    this.x = x;
-    this.y = y;
+
+
+
+
+var gameScreen = function() {
     
-};
-
-ball.prototype.draw = function() {
-     drawBall(this.x, this.y, 30,30);
-};
-
-ball.prototype.start = function() {
-    this.y -= 2*levelCounter;
-    ballMoving = 1; 
-};
-
-ball.prototype.stop = function() {
-    this.y -= 0;
-    ballMoving = 0;
+    background(42, 168, 168);
+    target();
+   
+    fill(0, 0, 0);
+    text("Level: " + levelCounter, 7,0);
+    text("Score: " + score,311,0);
     
+    drawBall(ballX, ballY, 30, 30);
+    
+    
+      if (keyPressed && keyCode === 0) {
+        ball.rise();
+    } 
+    
+    ball.draw();
 };
-
-var ball = new ball(200,365);
-
+ //Game playing screen
+ 
 draw = function() {
     if(stillPlaying){
     if(currentScene === 0) {
@@ -167,35 +205,11 @@ draw = function() {
     if (currentScene === 1) {
      splashScreen();
     }
-    else if(currentScene === 2) {
+    if(currentScene === 2) {
         gameScreen();
         
-        
-        
-         if(ballMoving === 0 && keyPressed && keyCode === UP){
-       
-       
-        ball.start();
-        
-         }
-            else if(ballMoving === 1 && keyPressed && keyCode === UP){
-                ball.stop();
-            }
-        
-     
-       ball.draw(); 
+    
+        }
     }
-  
-        
-    }
-    
-  
-        
-    
-    
-   
-    
-    
-     
-    
 };
+
